@@ -6,6 +6,8 @@ import {
   Delete,
   Param,
   Patch,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { MessagesService } from './messages.service';
 import { CreateMessageDto } from './dtos/create-msg-dto';
@@ -19,13 +21,15 @@ export class MessagesController {
     return this.messageService.findAll();
   }
 
+  @Post('/add')
+  @UsePipes(new ValidationPipe())
+  createMessage(@Body() body: CreateMessageDto) {
+    return this.messageService.createMsg(body.content);
+  }
+
   @Get('/:id')
   findOneMsg(@Param('id') id: string) {
     return this.messageService.findOneMsg(id);
-  }
-  @Post('/add')
-  createMessage(@Body() body: CreateMessageDto) {
-    return this.messageService.createMsg(body.content);
   }
 
   @Delete('/:id')
